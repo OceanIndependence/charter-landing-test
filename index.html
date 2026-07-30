@@ -15,8 +15,9 @@
 
     <!-- 01 HERO -->
     <section class="section hero" id="hero">
-      <video class="media" autoplay muted loop playsinline preload="auto"
-             src="media/s1.mp4" poster="media/s1-poster.jpg"></video>
+      <video class="media" autoplay muted loop playsinline preload="auto" data-eager
+             data-mobile="media/s1.mp4" data-desktop="media/s1-desktop.mp4"
+             poster="media/s1-poster.jpg" data-poster-desktop="media/s1-poster-desktop.jpg"></video>
       <div class="scrim scrim-hero"></div>
       <div class="hero-statement-wrap">
         <h1 class="hero-statement">Wake up somewhere new.</h1>
@@ -30,7 +31,8 @@
     <!-- 02 MORNING -->
     <section class="section morning">
       <video class="media" muted loop playsinline preload="none"
-             data-src="media/s2.mp4" poster="media/s2-poster.jpg"></video>
+             data-mobile="media/s2.mp4" data-desktop="media/s2-desktop.mp4"
+             poster="media/s2-poster.jpg" data-poster-desktop="media/s2-poster-desktop.jpg"></video>
       <div class="scrim scrim-morning"></div>
       <div class="statement-block pin-block">
         <div class="rule rule-mint"></div>
@@ -41,7 +43,8 @@
     <!-- 03 DAY -->
     <section class="section day">
       <video class="media" muted loop playsinline preload="none"
-             data-src="media/s3.mp4" poster="media/s3-poster.jpg"></video>
+             data-mobile="media/s3.mp4" data-desktop="media/s3-desktop.mp4"
+             poster="media/s3-poster.jpg" data-poster-desktop="media/s3-poster-desktop.jpg"></video>
       <div class="scrim scrim-day"></div>
       <div class="day-block">
         <p class="statement statement-day">Endless watertoys.<br>Zero schedule.</p>
@@ -88,7 +91,8 @@
     <!-- 05 GOLDEN HOUR -->
     <section class="section golden">
       <video class="media" muted loop playsinline preload="none"
-             data-src="media/s5.mp4" poster="media/s5-poster.jpg"></video>
+             data-mobile="media/s5.mp4" data-desktop="media/s5-desktop.mp4"
+             poster="media/s5-poster.jpg" data-poster-desktop="media/s5-poster-desktop.jpg"></video>
       <div class="scrim scrim-golden"></div>
       <div class="statement-block pin-block">
         <div class="rule rule-mint"></div>
@@ -98,8 +102,11 @@
 
     <!-- 06 ANYWHERE -->
     <section class="section anywhere">
-      <img class="media anywhere-image" src="media/s6.jpg" loading="lazy"
-           alt="Aerial view of a yacht at anchor in a turquoise bay">
+      <picture>
+        <source media="(min-width: 900px)" srcset="media/s6-desktop.jpg">
+        <img class="media anywhere-image" src="media/s6.jpg" loading="lazy"
+             alt="Aerial view of a yacht at anchor in a turquoise bay">
+      </picture>
       <div class="scrim scrim-anywhere"></div>
       <div class="anywhere-block">
         <p class="statement statement-anywhere">The Mediterranean. The Caribbean. Or somewhere nobody has heard of.</p>

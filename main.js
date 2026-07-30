@@ -1,5 +1,7 @@
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+selectSources();
+
 // Reduced motion: posters only — no playback, no pins, no rotation.
 if (reducedMotion) {
   document.querySelectorAll("video").forEach((video) => {
@@ -11,6 +13,27 @@ if (reducedMotion) {
   if (window.gsap && window.ScrollTrigger) {
     initMotion();
   }
+}
+
+// Each video carries a vertical cut (data-mobile) and a horizontal cut
+// (data-desktop); pick per viewport. Under reduced motion only the
+// posters are swapped and no video source is ever attached.
+function selectSources() {
+  const desktop = window.matchMedia("(min-width: 900px)").matches;
+  document.querySelectorAll("video.media").forEach((video) => {
+    if (desktop && video.dataset.posterDesktop) {
+      video.poster = video.dataset.posterDesktop;
+    }
+    if (reducedMotion) return;
+    const file = desktop ? video.dataset.desktop : video.dataset.mobile;
+    if (!file) return;
+    if (video.hasAttribute("data-eager")) {
+      video.src = file;
+      video.load();
+    } else {
+      video.dataset.src = file;
+    }
+  });
 }
 
 function initMedia() {
