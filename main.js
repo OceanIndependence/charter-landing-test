@@ -24,12 +24,17 @@ function selectSources() {
     if (desktop && video.dataset.posterDesktop) {
       video.poster = video.dataset.posterDesktop;
     }
-    if (reducedMotion) return;
+    if (reducedMotion) {
+      video.removeAttribute("src");
+      return;
+    }
     const file = desktop ? video.dataset.desktop : video.dataset.mobile;
     if (!file) return;
     if (video.hasAttribute("data-eager")) {
-      video.src = file;
+      if (video.getAttribute("src") !== file) video.src = file;
+      video.preload = "auto";
       video.load();
+      video.play().catch(() => {});
     } else {
       video.dataset.src = file;
     }
@@ -43,9 +48,11 @@ function initMedia() {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         const video = entry.target;
-        video.src = video.dataset.src;
-        video.removeAttribute("data-src");
-        video.load();
+        if (video.dataset.src) {
+          video.src = video.dataset.src;
+          video.removeAttribute("data-src");
+          video.load();
+        }
         observer.unobserve(video);
       });
     },
@@ -53,12 +60,18 @@ function initMedia() {
   );
   document.querySelectorAll("video[data-src]").forEach((video) => loader.observe(video));
 
-  // Play only the videos near the viewport, pause the rest.
+  // Play only the videos near the viewport, pause the rest. If a lazy
+  // video is reached before its loader has fired, attach the source here.
   const player = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         const video = entry.target;
         if (entry.isIntersecting) {
+          if (!video.src && video.dataset.src) {
+            video.src = video.dataset.src;
+            video.removeAttribute("data-src");
+            video.load();
+          }
           if (video.src) video.play().catch(() => {});
         } else {
           video.pause();
@@ -68,6 +81,22 @@ function initMedia() {
     { rootMargin: "25% 0px" }
   );
   document.querySelectorAll("video.media").forEach((video) => player.observe(video));
+
+  // Autoplay can be blocked (battery-saver modes, data saver). The first
+  // gesture is allowed to start playback, so retry the videos in view.
+  const resumeVisible = () => {
+    const vh = window.innerHeight;
+    document.querySelectorAll("video.media").forEach((video) => {
+      if (!video.src || !video.paused) return;
+      const box = video.getBoundingClientRect();
+      if (box.bottom > -0.25 * vh && box.top < 1.25 * vh) {
+        video.play().catch(() => {});
+      }
+    });
+  };
+  ["touchstart", "scroll", "click"].forEach((type) =>
+    window.addEventListener(type, resumeVisible, { once: true, passive: true })
+  );
 
   // 06 ANYWHERE — slow 8 s scale drift, once per entry.
   const still = document.querySelector(".anywhere-image");
