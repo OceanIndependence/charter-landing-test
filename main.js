@@ -118,8 +118,13 @@ function initMedia() {
 function initMotion() {
   gsap.registerPlugin(ScrollTrigger);
 
-  // Closest GSAP equivalent of the global cubic-bezier(0.16, 1, 0.3, 1).
-  const EASE = "expo.out";
+  // The handoff's global easing curve, exact via CustomEase, with a
+  // close approximation as fallback if the plugin fails to load.
+  let EASE = "expo.out";
+  if (window.CustomEase) {
+    gsap.registerPlugin(CustomEase);
+    EASE = CustomEase.create("oi", "0.16, 1, 0.3, 1");
+  }
   const RISE = { y: 12, duration: 0.48, ease: EASE };
 
   // 02 MORNING · 05 GOLDEN HOUR — statement pins ~80vh while the video
@@ -182,7 +187,7 @@ function initMotion() {
 
   gsap
     .timeline({ scrollTrigger: { trigger: ".yacht", start: "top 55%" } })
-    .to(drawn, { strokeDashoffset: 0, duration: 1.6, ease: "power2.inOut", stagger: 0.08 })
+    .to(drawn, { strokeDashoffset: 0, duration: 1.6, ease: EASE, stagger: 0.08 })
     .from(faded, { opacity: 0, duration: 0.8, ease: EASE, stagger: 0.05 }, "-=0.8")
     .from(".stat", { opacity: 0, ...RISE, stagger: 0.12 }, "-=0.2");
 

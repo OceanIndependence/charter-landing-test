@@ -118,7 +118,7 @@ body {
   text-align: center;
   text-wrap: pretty;
   opacity: 0;
-  animation: heroIn 480ms ease-out 1.2s forwards;
+  animation: heroIn 480ms var(--ease) 1.2s forwards;
 }
 
 @keyframes heroIn {
