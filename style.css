@@ -1,3 +1,26 @@
+@font-face {
+  font-family: "Gotham";
+  src: url("fonts/Gotham-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("fonts/Gotham-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --accent: #A7E6D7;
+  --bg-media: #04070C;
+  --bg-yacht: #040A12;
+  --bg-promise: #050B13;
+  --bg-turn: #03060B;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 *,
 *::before,
 *::after {
@@ -7,109 +30,680 @@
 }
 
 html {
-  background: #06090d;
+  background: var(--bg-media);
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #fff;
-  background: #06090d;
+  font-family: "Gotham", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  color: #FFFFFF;
+  background: var(--bg-media);
   -webkit-font-smoothing: antialiased;
 }
 
-.scene {
+.section {
   position: relative;
-  height: 100vh;
   height: 100svh;
   overflow: hidden;
+  background: var(--bg-media);
 }
 
-.scene-video {
+.media {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.scene::after {
-  content: "";
+.scrim {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(6, 9, 13, 0.25),
-    rgba(6, 9, 13, 0) 35%,
-    rgba(6, 9, 13, 0) 65%,
-    rgba(6, 9, 13, 0.25)
-  );
 }
 
-.scene-copy {
+.statement {
+  font-weight: 300;
+  color: #FFFFFF;
+  letter-spacing: 0.015em;
+  text-wrap: pretty;
+}
+
+.rule {
+  width: 24px;
+  height: 1px;
+  margin-bottom: 24px;
+}
+
+.rule-mint {
+  background: var(--accent);
+}
+
+.rule-white {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.desktop-br {
+  display: none;
+}
+
+/* 01 HERO */
+
+.scrim-hero {
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.42) 0%, rgba(4, 7, 12, 0.10) 45%, rgba(4, 7, 12, 0.55) 88%, rgba(4, 7, 12, 0.30) 100%);
+}
+
+.hero-statement-wrap {
   position: absolute;
-  inset: 0;
-  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 76%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 1.5rem;
-  text-align: center;
+  padding: 0 36px;
   pointer-events: none;
 }
 
-.scene-copy h2 {
-  font-size: clamp(1.75rem, 8vw, 3rem);
+.hero-statement {
   font-weight: 300;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  line-height: 1.35;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+  font-size: 36px;
+  line-height: 1.3;
+  letter-spacing: 0.015em;
+  text-align: center;
+  text-wrap: pretty;
   opacity: 0;
+  animation: heroIn 480ms ease-out 1.2s forwards;
 }
 
-.finale {
-  min-height: 100vh;
-  min-height: 100svh;
+@keyframes heroIn {
+  to { opacity: 1; }
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 36px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.scroll-cue-line {
+  width: 1px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.7);
+  transform-origin: top;
+  animation: cuePulse 4s ease-in-out infinite;
+}
+
+@keyframes cuePulse {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+  50% { transform: scaleY(1); opacity: 0.9; }
+}
+
+.scroll-cue-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  padding-left: 0.4em;
+}
+
+/* 02 MORNING · 05 GOLDEN HOUR — shared pinned statement layout */
+
+.scrim-morning {
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.15) 0%, rgba(4, 7, 12, 0.05) 40%, rgba(4, 7, 12, 0.68) 92%, rgba(4, 7, 12, 0.4) 100%);
+}
+
+.scrim-golden {
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.18) 0%, rgba(4, 7, 12, 0.05) 40%, rgba(4, 7, 12, 0.68) 92%, rgba(4, 7, 12, 0.4) 100%);
+}
+
+.statement-block {
+  position: absolute;
+  bottom: 96px;
+  left: 36px;
+  right: 52px;
+  pointer-events: none;
+  /* Keeps the statement above later sections while GSAP pins it. */
+  z-index: 10;
+}
+
+.statement-morning {
+  font-size: 30px;
+  line-height: 1.4;
+}
+
+.statement-golden {
+  font-size: 28px;
+  line-height: 1.45;
+}
+
+/* 03 DAY */
+
+.scrim-day {
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.55) 0%, rgba(4, 7, 12, 0.12) 45%, rgba(4, 7, 12, 0.25) 100%);
+}
+
+.day-block {
+  position: absolute;
+  top: 112px;
+  left: 36px;
+  right: 52px;
+  pointer-events: none;
+}
+
+.statement-day {
+  font-size: 34px;
+  line-height: 1.3;
+}
+
+/* 04 THE YACHT */
+
+.yacht {
+  background: var(--bg-yacht);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  position: absolute;
+  top: 64px;
+  left: 36px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hull-stage {
+  padding: 0 12px;
+  perspective: 1200px;
+}
+
+.hull-rotor {
+  transform-style: preserve-3d;
+}
+
+.hull {
+  width: 100%;
+  display: block;
+}
+
+.stat {
+  position: absolute;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  line-height: 2;
+}
+
+.stat-rule {
+  width: 1px;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+.stat-count {
+  top: 150px;
+  right: 36px;
+  text-align: right;
+}
+
+.stat-count .stat-rule {
+  height: 52px;
+  margin: 12px 1px 0 auto;
+}
+
+.stat-size {
+  bottom: 190px;
+  left: 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-size .stat-rule {
+  height: 44px;
+  margin: 0 0 12px 1px;
+}
+
+.stat-type {
+  bottom: 96px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.stat-type .stat-rule {
+  display: none;
+}
+
+/* 06 ANYWHERE */
+
+.scrim-anywhere {
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.2) 0%, rgba(4, 7, 12, 0.06) 40%, rgba(4, 7, 12, 0.72) 94%, rgba(4, 7, 12, 0.45) 100%);
+}
+
+.anywhere-image {
+  transform: scale(1);
+}
+
+.anywhere-image.is-drifting {
+  transform: scale(1.05);
+  transition: transform 8s linear;
+}
+
+.anywhere-block {
+  position: absolute;
+  bottom: 96px;
+  left: 36px;
+  right: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  pointer-events: none;
+}
+
+.statement-anywhere {
+  font-size: 30px;
+  line-height: 1.4;
+}
+
+.supporting {
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* 07 THE PROMISE */
+
+.promise {
+  background: var(--bg-promise);
+  display: flex;
+  align-items: center;
+}
+
+.promise-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+  padding: 0 36px;
+  width: 100%;
+}
+
+.proof {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.proof-line {
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 1.55;
+  letter-spacing: 0.015em;
+  color: #FFFFFF;
+  text-wrap: pretty;
+}
+
+.proof .rule {
+  margin-bottom: 0;
+}
+
+/* 08 THE TURN */
+
+.turn {
+  background: var(--bg-turn);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem;
-  padding: 3rem 1.5rem;
   text-align: center;
-  background: #06090d;
+  padding: 0 36px;
 }
 
-.finale h1 {
-  font-size: clamp(1.5rem, 7vw, 2.5rem);
+.turn-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.turn-mark {
+  width: 40px;
+  display: block;
+}
+
+.turn-wordmark {
+  width: 236px;
+  display: block;
+}
+
+.turn-statement {
   font-weight: 300;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  font-size: 28px;
+  line-height: 1.45;
+  letter-spacing: 0.015em;
+  color: #FFFFFF;
+  text-wrap: pretty;
+  margin-top: 72px;
+  max-width: 300px;
 }
 
-.finale p {
-  font-size: 1rem;
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.button {
-  margin-top: 1.5rem;
+.cta {
+  margin-top: 64px;
   display: inline-block;
-  padding: 0.9rem 2.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.8rem;
-  letter-spacing: 0.18em;
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  padding: 18px 34px 18px 38px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 480ms var(--ease), color 480ms var(--ease), transform 200ms var(--ease);
 }
 
-.button:hover,
-.button:focus-visible {
-  background: #fff;
-  color: #06090d;
+.cta:hover,
+.cta:focus-visible {
+  background: #FFFFFF;
+  color: var(--bg-turn);
+}
+
+.cta:active {
+  transform: scale(0.97);
+}
+
+.quiet-link {
+  margin-top: 28px;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 3px;
+  text-decoration: none;
+  transition: color 480ms var(--ease), border-color 480ms var(--ease);
+}
+
+.quiet-link:hover,
+.quiet-link:focus-visible {
+  color: #FFFFFF;
+  border-bottom-color: #FFFFFF;
+}
+
+/* Desktop adaptation — 1440 design */
+
+@media (min-width: 900px) {
+  .desktop-br {
+    display: inline;
+  }
+
+  .mobile-br {
+    display: none;
+  }
+
+  /* 01 HERO */
+  .scrim-hero {
+    background: linear-gradient(180deg, rgba(4, 7, 12, 0.38) 0%, rgba(4, 7, 12, 0.08) 45%, rgba(4, 7, 12, 0.5) 90%, rgba(4, 7, 12, 0.28) 100%);
+  }
+
+  .hero-statement {
+    font-size: 64px;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+  }
+
+  .scroll-cue {
+    bottom: 44px;
+    gap: 14px;
+  }
+
+  .scroll-cue-line {
+    height: 52px;
+  }
+
+  /* 02 MORNING */
+  .scrim-morning {
+    background: linear-gradient(90deg, rgba(4, 7, 12, 0.55) 0%, rgba(4, 7, 12, 0.15) 55%, rgba(4, 7, 12, 0.05) 100%);
+  }
+
+  .statement-block {
+    bottom: 120px;
+    left: 96px;
+    right: auto;
+    max-width: 640px;
+  }
+
+  .statement-block .rule {
+    width: 32px;
+    margin-bottom: 32px;
+  }
+
+  .statement-morning {
+    font-size: 44px;
+  }
+
+  /* 03 DAY */
+  .scrim-day {
+    background: linear-gradient(90deg, rgba(4, 7, 12, 0.05) 0%, rgba(4, 7, 12, 0.12) 50%, rgba(4, 7, 12, 0.55) 100%);
+  }
+
+  .day-block {
+    top: 140px;
+    left: auto;
+    right: 96px;
+    text-align: right;
+  }
+
+  .statement-day {
+    font-size: 52px;
+  }
+
+  /* 04 THE YACHT */
+  .yacht {
+    align-items: center;
+  }
+
+  .eyebrow {
+    top: 96px;
+    left: 96px;
+    font-size: 11px;
+  }
+
+  .hull-stage {
+    width: 880px;
+    padding: 0;
+  }
+
+  .hull {
+    stroke-width: 0.9;
+  }
+
+  .hull path[stroke-width="1.4"] {
+    stroke-width: 1.1;
+  }
+
+  .hull path[stroke-width="1"] {
+    stroke-width: 0.8;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    line-height: 2.1;
+  }
+
+  .stat-count {
+    top: 220px;
+    left: 180px;
+    right: auto;
+  }
+
+  .stat-count .stat-rule {
+    height: 72px;
+    margin: 14px 1px 0 auto;
+  }
+
+  .stat-size {
+    top: 190px;
+    right: 180px;
+    left: auto;
+    bottom: auto;
+    flex-direction: column-reverse;
+    text-align: left;
+  }
+
+  .stat-size .stat-rule {
+    height: 96px;
+    margin: 14px 0 0 1px;
+  }
+
+  .stat-type {
+    bottom: 130px;
+  }
+
+  .stat-type .stat-rule {
+    display: block;
+    height: 48px;
+    margin: 0 auto 14px;
+  }
+
+  /* 05 GOLDEN HOUR */
+  .scrim-golden {
+    background: linear-gradient(90deg, rgba(4, 7, 12, 0.55) 0%, rgba(4, 7, 12, 0.15) 55%, rgba(4, 7, 12, 0.05) 100%);
+  }
+
+  .golden .statement-block {
+    max-width: 680px;
+  }
+
+  .statement-golden {
+    font-size: 40px;
+    line-height: 1.5;
+  }
+
+  /* 06 ANYWHERE */
+  .scrim-anywhere {
+    background: linear-gradient(180deg, rgba(4, 7, 12, 0.15) 0%, rgba(4, 7, 12, 0.06) 40%, rgba(4, 7, 12, 0.65) 95%, rgba(4, 7, 12, 0.4) 100%);
+  }
+
+  .anywhere-block {
+    bottom: 120px;
+    left: 96px;
+    right: 96px;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 96px;
+  }
+
+  .statement-anywhere {
+    font-size: 44px;
+    max-width: 760px;
+  }
+
+  .supporting {
+    font-size: 15px;
+    line-height: 1.8;
+    max-width: 300px;
+    padding-bottom: 8px;
+  }
+
+  /* 07 THE PROMISE */
+  .promise-grid {
+    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 96px;
+    padding: 0 96px;
+  }
+
+  .proof {
+    gap: 32px;
+  }
+
+  .proof .rule {
+    width: 32px;
+  }
+
+  .proof-line {
+    font-size: 24px;
+    line-height: 1.6;
+  }
+
+  /* 08 THE TURN */
+  .turn-logo {
+    gap: 34px;
+  }
+
+  .turn-mark {
+    width: 48px;
+  }
+
+  .turn-wordmark {
+    width: 300px;
+  }
+
+  .turn-statement {
+    font-size: 36px;
+    line-height: 1.5;
+    margin-top: 88px;
+    max-width: 640px;
+  }
+
+  .cta {
+    margin-top: 72px;
+    font-size: 12px;
+    padding: 20px 40px 20px 44px;
+  }
+
+  .quiet-link {
+    margin-top: 32px;
+    font-size: 13px;
+  }
+}
+
+/* Reduced motion — posters only, no pins, no rotation */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-statement {
+    animation: none;
+    opacity: 1;
+  }
+
+  .scroll-cue-line {
+    animation: none;
+  }
+
+  .anywhere-image.is-drifting {
+    transition: none;
+    transform: none;
+  }
+
+  .cta,
+  .quiet-link {
+    transition: none;
+  }
 }

@@ -3,53 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Ocean Independence | Charter</title>
+  <meta name="theme-color" content="#03060B">
+  <title>Ocean Independence | Yacht Charter</title>
+  <link rel="preload" href="fonts/Gotham-Light.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Gotham-Medium.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <main>
 
-    <section class="scene">
-      <video class="scene-video" autoplay muted loop playsinline preload="auto"
-             src="clips/clip-1.mp4" poster="clips/clip-1.jpg"></video>
-      <div class="scene-copy"><h2>Where the horizon begins</h2></div>
+    <!-- 01 HERO -->
+    <section class="section hero" id="hero">
+      <video class="media" autoplay muted loop playsinline preload="auto"
+             src="media/s1.mp4" poster="media/s1-poster.jpg"></video>
+      <div class="scrim scrim-hero"></div>
+      <div class="hero-statement-wrap">
+        <h1 class="hero-statement">Wake up somewhere new.</h1>
+      </div>
+      <div class="scroll-cue">
+        <div class="scroll-cue-line"></div>
+        <div class="scroll-cue-label">Scroll to discover charter</div>
+      </div>
     </section>
 
-    <section class="scene">
-      <video class="scene-video" autoplay muted loop playsinline preload="auto"
-             src="clips/clip-2.mp4" poster="clips/clip-2.jpg"></video>
-      <div class="scene-copy"><h2>Your world, unhurried</h2></div>
+    <!-- 02 MORNING -->
+    <section class="section morning">
+      <video class="media" muted loop playsinline preload="none"
+             data-src="media/s2.mp4" poster="media/s2-poster.jpg"></video>
+      <div class="scrim scrim-morning"></div>
+      <div class="statement-block pin-block">
+        <div class="rule rule-mint"></div>
+        <p class="statement statement-morning">Your crew has been up since six.<br class="desktop-br"> You will never notice.</p>
+      </div>
     </section>
 
-    <section class="scene">
-      <video class="scene-video" muted loop playsinline preload="none"
-             data-src="clips/clip-3.mp4" poster="clips/clip-3.jpg"></video>
-      <div class="scene-copy"><h2>Anchored in the extraordinary</h2></div>
+    <!-- 03 DAY -->
+    <section class="section day">
+      <video class="media" muted loop playsinline preload="none"
+             data-src="media/s3.mp4" poster="media/s3-poster.jpg"></video>
+      <div class="scrim scrim-day"></div>
+      <div class="day-block">
+        <p class="statement statement-day">Endless watertoys.<br>Zero schedule.</p>
+      </div>
     </section>
 
-    <section class="scene">
-      <video class="scene-video" muted loop playsinline preload="none"
-             data-src="clips/clip-4.mp4" poster="clips/clip-4.jpg"></video>
-      <div class="scene-copy"><h2>Chart a course entirely your own</h2></div>
+    <!-- 04 THE YACHT -->
+    <section class="section yacht">
+      <div class="eyebrow">The Fleet</div>
+      <div class="hull-stage">
+        <div class="hull-rotor">
+          <svg class="hull" viewBox="0 0 640 240" fill="none" stroke="#A7E6D7" stroke-width="1.1" stroke-linecap="round" aria-hidden="true">
+            <line x1="0" y1="198" x2="640" y2="198" stroke-opacity="0.22" stroke-dasharray="1 7"></line>
+            <path d="M28 150 C 70 139 150 133 260 131 L 552 131 C 574 131 589 139 596 152 L 589 176 C 585 186 574 192 560 192 L 96 192 C 62 188 40 172 28 150 Z" stroke-width="1.4"></path>
+            <path d="M96 170 L 556 170" stroke-opacity="0.4"></path>
+            <path d="M136 181 L 500 181" stroke-opacity="0.45" stroke-dasharray="10 7"></path>
+            <path d="M150 131 L 152 112 C 153 106 158 102 166 102 L 466 102 C 487 102 499 112 506 131" stroke-opacity="0.85"></path>
+            <path d="M176 117 L 476 117" stroke-opacity="0.5" stroke-dasharray="14 9"></path>
+            <path d="M202 102 L 206 80 C 207 74 212 70 220 70 L 394 70 C 415 70 427 80 434 102" stroke-opacity="0.75"></path>
+            <path d="M226 86 L 414 86" stroke-opacity="0.45" stroke-dasharray="12 8"></path>
+            <path d="M242 70 L 248 52 C 249 47 254 44 260 44 L 338 44 C 352 44 361 50 365 60 L 369 70" stroke-opacity="0.65"></path>
+            <path d="M328 44 L 320 16 M320 16 L 346 28" stroke-opacity="0.6" stroke-width="1"></path>
+            <path d="M28 150 C 58 122 108 110 150 108" stroke-opacity="0.3"></path>
+            <ellipse cx="180" cy="146" rx="9" ry="46" stroke-opacity="0.25"></ellipse>
+            <ellipse cx="300" cy="130" rx="10" ry="70" stroke-opacity="0.3"></ellipse>
+            <ellipse cx="430" cy="140" rx="9" ry="55" stroke-opacity="0.25"></ellipse>
+          </svg>
+        </div>
+      </div>
+      <div class="stat stat-count">
+        <div class="stat-label">Over 400 yachts<br>for charter</div>
+        <div class="stat-rule stat-rule-below"></div>
+      </div>
+      <div class="stat stat-size">
+        <div class="stat-rule stat-rule-above"></div>
+        <div class="stat-label">29m to 190m</div>
+      </div>
+      <div class="stat stat-type">
+        <div class="stat-rule stat-rule-above stat-rule-centred"></div>
+        <div class="stat-label">Motor and<br class="mobile-br"> sailing yachts</div>
+      </div>
     </section>
 
-    <section class="scene">
-      <video class="scene-video" muted loop playsinline preload="none"
-             data-src="clips/clip-5.mp4" poster="clips/clip-5.jpg"></video>
-      <div class="scene-copy"><h2>Evenings that drift with the tide</h2></div>
+    <!-- 05 GOLDEN HOUR -->
+    <section class="section golden">
+      <video class="media" muted loop playsinline preload="none"
+             data-src="media/s5.mp4" poster="media/s5-poster.jpg"></video>
+      <div class="scrim scrim-golden"></div>
+      <div class="statement-block pin-block">
+        <div class="rule rule-mint"></div>
+        <p class="statement statement-golden">The chef asked what you fancied. That was the only decision you made today.</p>
+      </div>
     </section>
 
-    <section class="scene">
-      <video class="scene-video" muted loop playsinline preload="none"
-             data-src="clips/clip-6.mp4" poster="clips/clip-6.jpg"></video>
-      <div class="scene-copy"><h2>The sea, on your terms</h2></div>
+    <!-- 06 ANYWHERE -->
+    <section class="section anywhere">
+      <img class="media anywhere-image" src="media/s6.jpg" loading="lazy"
+           alt="Aerial view of a yacht at anchor in a turquoise bay">
+      <div class="scrim scrim-anywhere"></div>
+      <div class="anywhere-block">
+        <p class="statement statement-anywhere">The Mediterranean. The Caribbean. Or somewhere nobody has heard of.</p>
+        <p class="supporting">Itineraries tailored to you, from the C&ocirc;te d'Azur to the South Pacific.</p>
+      </div>
     </section>
 
-    <section class="finale">
-      <h1>Ocean Independence</h1>
-      <p>Over 100 yachts for charter</p>
-      <a class="button" href="#">Begin your journey</a>
+    <!-- 07 THE PROMISE -->
+    <section class="section promise">
+      <div class="promise-grid">
+        <div class="proof">
+          <div class="rule rule-white"></div>
+          <p class="proof-line">A dedicated charter broker from first call to final farewell.</p>
+        </div>
+        <div class="proof">
+          <div class="rule rule-white"></div>
+          <p class="proof-line">15 offices worldwide. 24 languages spoken.</p>
+        </div>
+        <div class="proof">
+          <div class="rule rule-white"></div>
+          <p class="proof-line">Private jets, transfers and villas arranged around your charter.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 THE TURN -->
+    <section class="section turn">
+      <div class="turn-logo">
+        <img class="turn-mark" src="assets/o-icon-white.png" alt="">
+        <img class="turn-wordmark" src="assets/logo-white.png" alt="Ocean Independence">
+      </div>
+      <p class="turn-statement">One of the world's largest charter fleets.<br class="desktop-br"> One yacht is yours.</p>
+      <a class="cta" href="https://www.oceanindependence.com">Browse yachts for charter</a>
+      <a class="quiet-link" href="https://www.oceanindependence.com/contact">Or speak to a charter consultant</a>
     </section>
 
   </main>
