@@ -28,6 +28,10 @@ if (reducedMotion) {
   initMedia();
   if (window.gsap && window.ScrollTrigger) {
     initMotion();
+  } else {
+    // Without GSAP the panels would stay translated off screen; stack
+    // the experience beats statically instead so the text stays readable.
+    document.documentElement.classList.add("no-motion");
   }
 }
 
@@ -96,7 +100,13 @@ function initMedia() {
   function updatePlayback() {
     videos.forEach((video) => {
       const section = video.closest(".section");
-      if (onShow(section, 0.25 * window.innerHeight)) {
+      // Once an experience's black panel has fully covered its video
+      // (one viewport plus the panel window into the section), it can
+      // pause — no point decoding behind the panel.
+      const panelDone =
+        section.querySelector(".panel") &&
+        window.scrollY > flowTop.get(section) + 1.15 * window.innerHeight;
+      if (!panelDone && onShow(section, 0.25 * window.innerHeight)) {
         if (!video.src && video.dataset.src) {
           video.src = video.dataset.src;
           video.removeAttribute("data-src");
@@ -169,15 +179,52 @@ function initMotion() {
     );
   });
 
-  // 03–06 THE EXPERIENCES — lockups fade in on the hero's timing:
-  // a 1.2 s beat after the section arrives, then 480 ms rise-and-fade.
+  // 03–06 THE EXPERIENCES — two beats, scrubbed so the guest sets the
+  // pace and scrolling back reverses cleanly. The video plays clean
+  // while the frame pins; after ~60vh the black panel rises over it
+  // across ~40vh of scroll (about 600 ms at a natural pace); once
+  // covered, the headline fades in and the subheadline follows 200 ms
+  // later, both rising as they fade.
   document.querySelectorAll(".experience").forEach((section) => {
-    gsap.from(section.querySelectorAll(".lockup-headline, .lockup-sub"), {
-      opacity: 0,
-      ...RISE,
-      delay: 1.2,
-      scrollTrigger: { trigger: section, start: enters(section, 0.6) },
-    });
+    const panel = section.querySelector(".panel");
+
+    // y: 0 cancels the CSS translateY(100%) fallback (GSAP parses it as
+    // a pixel offset), leaving yPercent as the single source of truth.
+    gsap.fromTo(
+      panel,
+      { yPercent: 100, y: 0 },
+      {
+        yPercent: 0,
+        y: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: () => flowTop.get(section) + 0.6 * vh(),
+          end: () => flowTop.get(section) + 1.0 * vh(),
+          scrub: true,
+        },
+      }
+    );
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: () => flowTop.get(section) + 1.05 * vh(),
+          toggleActions: "play none none reverse",
+        },
+      })
+      .from(section.querySelector(".lockup-headline"), {
+        autoAlpha: 0,
+        y: 10,
+        duration: 0.48,
+        ease: EASE,
+      })
+      .from(
+        section.querySelector(".lockup-sub"),
+        { autoAlpha: 0, y: 10, duration: 0.48, ease: EASE },
+        0.2
+      );
   });
 
   // 07 THE CHARTER EXPERIENCE — hull draws in, then the six lines build

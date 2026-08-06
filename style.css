@@ -17,6 +17,7 @@
   --bg-media: #04070C;
   --bg-fleet: #040A12;
   --bg-monaco: #080C11;
+  --bg-panel: #03060B;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -43,11 +44,12 @@ body {
 /* Every section sticks at the top of the viewport and is covered by the
    next one sliding over it — the curtain reveal. Layout space is kept,
    so scroll length and trigger positions are unaffected. */
+/* No overflow: hidden here — it would break the sticky frames inside
+   tall sections (an overflow ancestor becomes their sticky scrollport). */
 .section {
   position: sticky;
   top: 0;
   height: 100svh;
-  overflow: hidden;
   background: var(--bg-media);
 }
 
@@ -57,10 +59,12 @@ body {
   height: 180svh;
 }
 
+/* Sticky inside its own section, so a tall section's frame keeps its
+   full dwell even near the end of the page, where the section itself
+   runs out of room to stick. */
 .frame {
-  position: absolute;
+  position: sticky;
   top: 0;
-  left: 0;
   width: 100%;
   height: 100svh;
   overflow: hidden;
@@ -202,33 +206,39 @@ body {
   color: rgba(255, 255, 255, 0.72);
 }
 
-/* 03–06 THE EXPERIENCES — hero-like lockups over full-bleed loops */
+/* 03–06 THE EXPERIENCES — two beats each: the video plays clean while
+   the 100svh frame pins, then the black panel rises over it (scrubbed
+   to scroll) and carries the text. 260svh = arrival + clean video dwell
+   + panel rise + text dwell. */
 
-.experience-monaco {
+.experience {
+  height: 260svh;
+}
+
+.experience-monaco .frame {
   background: var(--bg-monaco);
 }
 
-.scrim-experience {
-  background: linear-gradient(180deg, rgba(4, 7, 12, 0.45) 0%, rgba(4, 7, 12, 0.12) 45%, rgba(4, 7, 12, 0.5) 100%);
-}
-
-.experience-celebration .scrim-experience {
-  background: linear-gradient(180deg, rgba(4, 7, 12, 0.5) 0%, rgba(4, 7, 12, 0.15) 45%, rgba(4, 7, 12, 0.5) 100%);
-}
-
-.lockup {
+.panel {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background: var(--bg-panel);
+  transform: translateY(100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 36px;
+  text-align: center;
+}
+
+.lockup {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 20px;
-  padding: 0 36px;
-  text-align: center;
   pointer-events: none;
 }
 
@@ -438,17 +448,12 @@ body {
   }
 
   /* 03–06 THE EXPERIENCES */
-  .scrim-experience {
-    background: linear-gradient(180deg, rgba(4, 7, 12, 0.4) 0%, rgba(4, 7, 12, 0.12) 45%, rgba(4, 7, 12, 0.45) 100%);
-  }
-
-  .experience-celebration .scrim-experience {
-    background: linear-gradient(180deg, rgba(4, 7, 12, 0.45) 0%, rgba(4, 7, 12, 0.15) 45%, rgba(4, 7, 12, 0.45) 100%);
+  .panel {
+    padding: 0 96px;
   }
 
   .lockup {
     gap: 28px;
-    padding: 0 96px;
   }
 
   .lockup-headline {
@@ -559,11 +564,33 @@ body {
   }
 }
 
-/* Reduced motion — posters only, no pins, no rotation, no sequences */
+/* Reduced motion — posters only, no pins, no rotation, no sequences.
+   Experiences stack their two beats statically: poster viewport, then
+   the black text panel. html.no-motion gets the same treatment when
+   GSAP fails to load, so the panel text is never unreachable. */
 
 @media (prefers-reduced-motion: reduce) {
   .section {
     position: static;
+    height: 100svh;
+  }
+
+  .experience,
+  .experience .frame {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+
+  .experience .media {
+    position: relative;
+    display: block;
+    height: 100svh;
+  }
+
+  .panel {
+    position: relative;
+    transform: none;
     height: 100svh;
   }
 
@@ -579,4 +606,23 @@ body {
   .cta {
     transition: none;
   }
+}
+
+html.no-motion .experience,
+html.no-motion .experience .frame {
+  position: static;
+  height: auto;
+  overflow: visible;
+}
+
+html.no-motion .experience .media {
+  position: relative;
+  display: block;
+  height: 100svh;
+}
+
+html.no-motion .panel {
+  position: relative;
+  transform: none;
+  height: 100svh;
 }
