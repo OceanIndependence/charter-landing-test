@@ -283,7 +283,25 @@ function initMotion() {
         `lines+=${at + 0.25}`
       );
   });
-  sequence.from(".cta-wrap", { opacity: 0, ...RISE }, ">");
+  sequence.from(".cta-wrap", { opacity: 0, ...RISE, onComplete: fixCta }, ">");
+
+  // Once the entrance has finished, the CTA leaves the flow and fixes
+  // itself to the viewport centre for the rest of the session. Its old
+  // space is reserved first so the page never jumps, the wrapper's
+  // leftover transform is cleared (a transformed ancestor would anchor
+  // position: fixed to itself), and because the flow spot and the
+  // centre cannot match, the swap hides inside a 200ms cross-fade.
+  function fixCta() {
+    const wrap = document.querySelector(".cta-wrap");
+    const cta = wrap.querySelector(".cta");
+    wrap.style.minHeight = wrap.offsetHeight + "px";
+    gsap.set(wrap, { clearProps: "transform" });
+    gsap
+      .timeline()
+      .to(cta, { opacity: 0, duration: 0.1, ease: "none" })
+      .add(() => cta.classList.add("cta-fixed"))
+      .to(cta, { opacity: 1, duration: 0.1, ease: "none" });
+  }
 
   gsap.fromTo(
     ".hull-rotor",
