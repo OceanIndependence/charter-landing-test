@@ -38,10 +38,20 @@ Built to the design handoff in the client's zip: eight sections, mobile-first at
 
 - Every `.section` is `position: sticky; top: 0` — the curtain reveal.
   Covered sections still report viewport-sized rects, so visibility for
-  play/pause, drift and ScrollTriggers is computed from flow layout offsets
+  play/pause and ScrollTriggers is computed from flow layout offsets
   (see `measureFlow` in main.js), never from IntersectionObserver alone.
-- Sections 2 and 5 are 180svh with a 100svh `.frame`; the statement pin is
-  pure CSS, only the release fade is GSAP.
+- Tall sections (opening 180svh, experiences 260svh) pin via a STICKY
+  100svh `.frame` inside the section, not via the section's own
+  stickiness — a sticky section cannot shift past the bottom of `main`,
+  so late-page tall sections release early (celebration broke this way).
+  Corollary: `.section` must NOT have `overflow: hidden` (an overflow
+  ancestor becomes the sticky frame's scrollport and kills it); clipping
+  lives on `.frame`.
+- Experiences are two-beat: clean video while the frame pins, then a
+  `#03060B` panel rises over it (GSAP-scrubbed yPercent 100→0; the CSS
+  translateY(100%) fallback must be cancelled with y: 0 in the tween or
+  the transforms stack), then the lockup fades in, reversing on scroll
+  back. Videos pause once their panel has covered them.
 - Videos: per-viewport sources (`data-mobile`/`data-desktop`) selected at
   load; hero keeps a real `src` in HTML so it plays even without JS;
   playback retries on first gesture for battery-saver modes.

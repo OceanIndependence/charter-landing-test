@@ -18,16 +18,24 @@ measureFlow();
 selectSources();
 
 // Reduced motion: posters only — no playback, no pins, no rotation,
-// no sequenced reveals (everything is visible statically by default).
+// no sequenced reveals. The panel text still enters, but as a fade
+// only, with no movement: a class arms the CSS transition and an
+// observer plays it once per lockup as it comes into view.
 if (reducedMotion) {
   document.querySelectorAll("video").forEach((video) => {
     video.removeAttribute("autoplay");
     video.pause();
   });
+  initTextEntrances();
 } else {
   initMedia();
+  initTextEntrances();
   if (window.gsap && window.ScrollTrigger) {
     initMotion();
+  } else {
+    // Without GSAP the panels would stay translated off screen; stack
+    // the experience beats statically instead so the text stays readable.
+    document.documentElement.classList.add("no-motion");
   }
 }
 
@@ -55,6 +63,29 @@ function selectSources() {
       video.dataset.src = file;
     }
   });
+}
+
+// Text entrances — plain CSS transitions triggered by a class, one
+// IntersectionObserver at threshold 0.4, firing once then unobserving
+// so nothing replays, and never firing on page load. The opening is
+// observed at section level; the experiences observe the black panel
+// itself, because a 260svh section can never reach 40% visibility in a
+// 100svh viewport (the panel's clipped rect can, as it rises).
+function initTextEntrances() {
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const block = entry.target.querySelector(".pin-block, .lockup");
+        void block.offsetWidth;
+        block.classList.add("is-visible");
+        obs.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.4 }
+  );
+  document.querySelectorAll(".opening").forEach((section) => observer.observe(section));
+  document.querySelectorAll(".experience .panel").forEach((panel) => observer.observe(panel));
 }
 
 // A section is on show from one viewport before its flow slot until the
@@ -96,7 +127,13 @@ function initMedia() {
   function updatePlayback() {
     videos.forEach((video) => {
       const section = video.closest(".section");
-      if (onShow(section, 0.25 * window.innerHeight)) {
+      // Once an experience's black panel has fully covered its video
+      // (one viewport plus the panel window into the section), it can
+      // pause — no point decoding behind the panel.
+      const panelDone =
+        section.querySelector(".panel") &&
+        window.scrollY > flowTop.get(section) + 1.15 * window.innerHeight;
+      if (!panelDone && onShow(section, 0.25 * window.innerHeight)) {
         if (!video.src && video.dataset.src) {
           video.src = video.dataset.src;
           video.removeAttribute("data-src");
@@ -146,12 +183,6 @@ function initMotion() {
   document.querySelectorAll(".pin-block").forEach((block) => {
     const section = block.closest(".section");
 
-    gsap.from(block.children, {
-      opacity: 0,
-      ...RISE,
-      scrollTrigger: { trigger: section, start: enters(section, 0.6) },
-    });
-
     gsap.fromTo(
       block,
       { opacity: 1 },
@@ -169,15 +200,36 @@ function initMotion() {
     );
   });
 
-  // 03–06 THE EXPERIENCES — lockups fade in on the hero's timing:
-  // a 1.2 s beat after the section arrives, then 480 ms rise-and-fade.
+  // 03–06 THE EXPERIENCES — two beats, scrubbed so the guest sets the
+  // pace and scrolling back reverses cleanly. The video plays clean
+  // while the frame pins; after ~60vh the black panel rises over it
+  // across ~40vh of scroll (about 600 ms at a natural pace); once
+  // covered, the headline fades in and the subheadline follows 200 ms
+  // later, both rising as they fade.
   document.querySelectorAll(".experience").forEach((section) => {
-    gsap.from(section.querySelectorAll(".lockup-headline, .lockup-sub"), {
-      opacity: 0,
-      ...RISE,
-      delay: 1.2,
-      scrollTrigger: { trigger: section, start: enters(section, 0.6) },
-    });
+    const panel = section.querySelector(".panel");
+
+    // y: 0 cancels the CSS translateY(100%) fallback (GSAP parses it as
+    // a pixel offset), leaving yPercent as the single source of truth.
+    gsap.fromTo(
+      panel,
+      { yPercent: 100, y: 0 },
+      {
+        yPercent: 0,
+        y: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: () => flowTop.get(section) + 0.6 * vh(),
+          end: () => flowTop.get(section) + 1.0 * vh(),
+          scrub: true,
+        },
+      }
+    );
+
+    // The text entrance itself is CSS, triggered by initTextEntrances
+    // observing this panel — rule opens from centre, then headline,
+    // then subheadline.
   });
 
   // 07 THE CHARTER EXPERIENCE — hull draws in, then the six lines build
@@ -212,14 +264,50 @@ function initMotion() {
   });
   sequence
     .to(drawn, { strokeDashoffset: 0, duration: 1.6, ease: EASE, stagger: 0.08 })
-    .from(faded, { opacity: 0, duration: 0.8, ease: EASE, stagger: 0.05 }, "-=0.8");
-  order.forEach((line) => {
+    .from(faded, { opacity: 0, duration: 0.8, ease: EASE, stagger: 0.05 }, "-=0.8")
+    .addLabel("lines");
+  // Rule 250ms, text 250ms starting as its rule finishes; each line
+  // begins 100ms before the previous line's text ends (a 400ms cadence)
+  // so the sequence flows continuously instead of stepping.
+  order.forEach((line, i) => {
+    const at = i * 0.4;
     sequence
-      .from(line.querySelector(".stat-rule"), { scaleY: 0, duration: 0.4, ease: EASE }, ">")
-      .from(line.querySelector(".stat-label"), { opacity: 0, y: 10, duration: 0.3, ease: EASE }, ">")
-      .to({}, { duration: 0.12 });
+      .from(
+        line.querySelector(".stat-rule"),
+        { scaleY: 0, duration: 0.25, ease: EASE },
+        `lines+=${at}`
+      )
+      .from(
+        line.querySelector(".stat-label"),
+        { opacity: 0, y: 10, duration: 0.25, ease: EASE },
+        `lines+=${at + 0.25}`
+      );
   });
-  sequence.from(".cta-wrap", { opacity: 0, ...RISE }, ">");
+  sequence.from(".cta-wrap", { opacity: 0, ...RISE, onComplete: fixCta }, ">");
+
+  // Once the entrance has finished, the CTA leaves the flow and fixes
+  // itself to the bottom centre of the viewport for the rest of the
+  // session. Its old space is reserved first so the page never jumps,
+  // and the wrapper's leftover transform is cleared (a transformed
+  // ancestor would anchor position: fixed to itself). The fixed offset
+  // matches the button's resting place in the fleet section, so the
+  // swap is usually pixel-identical; it only cross-fades if the guest
+  // happened to be mid-scroll and the two positions differ.
+  function fixCta() {
+    const wrap = document.querySelector(".cta-wrap");
+    const cta = wrap.querySelector(".cta");
+    wrap.style.minHeight = wrap.offsetHeight + "px";
+    gsap.set(wrap, { clearProps: "transform" });
+
+    const before = cta.getBoundingClientRect();
+    cta.classList.add("cta-fixed");
+    const after = cta.getBoundingClientRect();
+    const moved =
+      Math.abs(after.top - before.top) > 1 || Math.abs(after.left - before.left) > 1;
+    if (moved) {
+      gsap.fromTo(cta, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" });
+    }
+  }
 
   gsap.fromTo(
     ".hull-rotor",
