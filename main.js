@@ -18,12 +18,26 @@ measureFlow();
 selectSources();
 
 // Reduced motion: posters only — no playback, no pins, no rotation,
-// no sequenced reveals (everything is visible statically by default).
+// no sequenced reveals. The panel text still enters, but as a fade
+// only, with no movement: a class arms the CSS transition and an
+// observer plays it once per lockup as it comes into view.
 if (reducedMotion) {
   document.querySelectorAll("video").forEach((video) => {
     video.removeAttribute("autoplay");
     video.pause();
   });
+  document.documentElement.classList.add("rm-fade");
+  const fadeIn = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.4 }
+  );
+  document.querySelectorAll(".lockup").forEach((lockup) => fadeIn.observe(lockup));
 } else {
   initMedia();
   if (window.gsap && window.ScrollTrigger) {
@@ -206,23 +220,26 @@ function initMotion() {
       }
     );
 
+    // Text enters once, when the panel settles: 700 ms, opacity and
+    // transform only (compositor-friendly), headline first, subheadline
+    // at +200 ms. Never scrubbed, never replayed on scroll back.
     gsap
       .timeline({
         scrollTrigger: {
           trigger: section,
-          start: () => flowTop.get(section) + 1.05 * vh(),
-          toggleActions: "play none none reverse",
+          start: () => flowTop.get(section) + 1.0 * vh(),
+          once: true,
         },
       })
       .from(section.querySelector(".lockup-headline"), {
         autoAlpha: 0,
-        y: 10,
-        duration: 0.48,
+        y: 14,
+        duration: 0.7,
         ease: EASE,
       })
       .from(
         section.querySelector(".lockup-sub"),
-        { autoAlpha: 0, y: 10, duration: 0.48, ease: EASE },
+        { autoAlpha: 0, y: 14, duration: 0.7, ease: EASE },
         0.2
       );
   });
