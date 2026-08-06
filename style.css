@@ -463,16 +463,18 @@ body {
   transform: scale(0.97);
 }
 
-/* After its entrance the CTA becomes fixed, centred in the viewport
-   (within the iOS safe area) for the rest of the session. Centring via
-   inset + margin auto keeps transform free for the press scale, and
-   the hit area stays the button's own box. */
+/* After its entrance the CTA becomes fixed at the bottom centre of the
+   viewport for the rest of the session, at the same offset it holds in
+   the fleet section so the swap is position-matched. Centring via
+   left/right + margin auto keeps transform free for the press scale,
+   and the hit area stays the button's own box. */
 .cta-fixed {
   position: fixed;
-  inset: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
-  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+  margin: 0 auto;
   width: max-content;
-  height: max-content;
   z-index: 100;
 }
 
@@ -652,6 +654,11 @@ body {
     min-width: 300px;
     padding: 20px 40px 20px 44px;
     white-space: nowrap;
+  }
+
+  /* Matches the desktop flow offset (.cta-wrap bottom: 64px). */
+  .cta-fixed {
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 }
 

@@ -286,21 +286,27 @@ function initMotion() {
   sequence.from(".cta-wrap", { opacity: 0, ...RISE, onComplete: fixCta }, ">");
 
   // Once the entrance has finished, the CTA leaves the flow and fixes
-  // itself to the viewport centre for the rest of the session. Its old
-  // space is reserved first so the page never jumps, the wrapper's
-  // leftover transform is cleared (a transformed ancestor would anchor
-  // position: fixed to itself), and because the flow spot and the
-  // centre cannot match, the swap hides inside a 200ms cross-fade.
+  // itself to the bottom centre of the viewport for the rest of the
+  // session. Its old space is reserved first so the page never jumps,
+  // and the wrapper's leftover transform is cleared (a transformed
+  // ancestor would anchor position: fixed to itself). The fixed offset
+  // matches the button's resting place in the fleet section, so the
+  // swap is usually pixel-identical; it only cross-fades if the guest
+  // happened to be mid-scroll and the two positions differ.
   function fixCta() {
     const wrap = document.querySelector(".cta-wrap");
     const cta = wrap.querySelector(".cta");
     wrap.style.minHeight = wrap.offsetHeight + "px";
     gsap.set(wrap, { clearProps: "transform" });
-    gsap
-      .timeline()
-      .to(cta, { opacity: 0, duration: 0.1, ease: "none" })
-      .add(() => cta.classList.add("cta-fixed"))
-      .to(cta, { opacity: 1, duration: 0.1, ease: "none" });
+
+    const before = cta.getBoundingClientRect();
+    cta.classList.add("cta-fixed");
+    const after = cta.getBoundingClientRect();
+    const moved =
+      Math.abs(after.top - before.top) > 1 || Math.abs(after.left - before.left) > 1;
+    if (moved) {
+      gsap.fromTo(cta, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" });
+    }
   }
 
   gsap.fromTo(
