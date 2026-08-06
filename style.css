@@ -15,9 +15,8 @@
 :root {
   --accent: #A7E6D7;
   --bg-media: #04070C;
-  --bg-yacht: #040A12;
-  --bg-promise: #050B13;
-  --bg-turn: #03060B;
+  --bg-fleet: #040A12;
+  --bg-monaco: #080C11;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -30,7 +29,7 @@
 }
 
 html {
-  background: var(--bg-media);
+  background: var(--bg-fleet);
 }
 
 body {
@@ -52,10 +51,9 @@ body {
   background: var(--bg-media);
 }
 
-/* Sections 2 and 5 are 180svh: their 100svh frame stays on screen for
-   an extra ~80vh of scroll, pinning the statement over its own video. */
-.morning,
-.golden {
+/* Section 2 is 180svh: its 100svh frame stays on screen for an extra
+   ~80vh of scroll, pinning the statement over its own video. */
+.opening {
   height: 180svh;
 }
 
@@ -96,15 +94,10 @@ body {
 .rule {
   width: 24px;
   height: 1px;
-  margin-bottom: 24px;
 }
 
 .rule-mint {
   background: var(--accent);
-}
-
-.rule-white {
-  background: rgba(255, 255, 255, 0.3);
 }
 
 .desktop-br {
@@ -179,89 +172,139 @@ body {
   padding-left: 0.4em;
 }
 
-/* 02 MORNING · 05 GOLDEN HOUR — shared pinned statement layout */
+/* 02 OPENING — pinned statement over its own video */
 
-.scrim-morning {
+.scrim-opening {
   background: linear-gradient(180deg, rgba(4, 7, 12, 0.15) 0%, rgba(4, 7, 12, 0.05) 40%, rgba(4, 7, 12, 0.68) 92%, rgba(4, 7, 12, 0.4) 100%);
-}
-
-.scrim-golden {
-  background: linear-gradient(180deg, rgba(4, 7, 12, 0.18) 0%, rgba(4, 7, 12, 0.05) 40%, rgba(4, 7, 12, 0.68) 92%, rgba(4, 7, 12, 0.4) 100%);
 }
 
 .statement-block {
   position: absolute;
   bottom: 96px;
   left: 36px;
-  right: 52px;
+  right: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   pointer-events: none;
 }
 
-.statement-morning {
+.statement-opening {
   font-size: 30px;
   line-height: 1.4;
 }
 
-.statement-golden {
-  font-size: 28px;
-  line-height: 1.45;
+.subline {
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
 }
 
-/* 03 DAY */
+/* 03–06 THE EXPERIENCES — hero-like lockups over full-bleed loops */
 
-.scrim-day {
-  background: linear-gradient(180deg, rgba(4, 7, 12, 0.55) 0%, rgba(4, 7, 12, 0.12) 45%, rgba(4, 7, 12, 0.25) 100%);
+.experience-monaco {
+  background: var(--bg-monaco);
 }
 
-.day-block {
+.scrim-experience {
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.45) 0%, rgba(4, 7, 12, 0.12) 45%, rgba(4, 7, 12, 0.5) 100%);
+}
+
+.experience-celebration .scrim-experience {
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.5) 0%, rgba(4, 7, 12, 0.15) 45%, rgba(4, 7, 12, 0.5) 100%);
+}
+
+.lockup {
   position: absolute;
-  top: 112px;
-  left: 36px;
-  right: 52px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 36px;
+  text-align: center;
   pointer-events: none;
 }
 
-.statement-day {
-  font-size: 34px;
+.lockup-headline {
+  font-weight: 300;
+  font-size: 36px;
   line-height: 1.3;
+  letter-spacing: 0.015em;
+  color: #FFFFFF;
+  text-wrap: pretty;
 }
 
-/* 04 THE YACHT */
+.lockup-sub {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 280px;
+}
 
-.yacht {
-  background: var(--bg-yacht);
+.experience-celebration .lockup-sub {
+  max-width: 290px;
+}
+
+/* 07 THE CHARTER EXPERIENCE + CTA */
+
+.fleet {
+  background: var(--bg-fleet);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding: 44px 36px 48px;
 }
 
 .eyebrow {
-  position: absolute;
-  top: 64px;
-  left: 36px;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--accent);
+  text-align: center;
 }
 
-.hull-stage {
-  padding: 0 12px;
-  perspective: 1200px;
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.hull-rotor {
-  transform-style: preserve-3d;
+.lines-above {
+  margin-top: 28px;
 }
 
-.hull {
-  width: 100%;
-  display: block;
+.lines-below {
+  margin-top: 16px;
 }
 
-.stat {
-  position: absolute;
+.stat-line {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-line:nth-child(1) {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.stat-line:nth-child(2) {
+  align-items: center;
+  text-align: center;
+}
+
+.stat-line:nth-child(3) {
+  align-items: flex-end;
+  text-align: right;
 }
 
 .stat-label {
@@ -276,159 +319,42 @@ body {
 .stat-rule {
   width: 1px;
   background: var(--accent);
-  opacity: 0.5;
+  opacity: 0.6;
+  height: 24px;
 }
 
-.stat-count {
-  top: 150px;
-  right: 36px;
-  text-align: right;
+/* Rules always face the hull: above-hull lines draw upward from their
+   bottom end, below-hull lines downward from their top end. */
+.stat-line.above .stat-rule {
+  transform-origin: bottom;
 }
 
-.stat-count .stat-rule {
-  height: 52px;
-  margin: 12px 1px 0 auto;
+.stat-line.below .stat-rule {
+  transform-origin: top;
 }
 
-.stat-size {
-  bottom: 190px;
-  left: 36px;
-  display: flex;
-  flex-direction: column;
+.hull-stage {
+  margin: 16px -24px 0;
+  perspective: 1200px;
 }
 
-.stat-size .stat-rule {
-  height: 44px;
-  margin: 0 0 12px 1px;
+.hull-rotor {
+  transform-style: preserve-3d;
 }
 
-.stat-type {
-  bottom: 96px;
-  left: 0;
+.hull {
   width: 100%;
-  text-align: center;
+  display: block;
 }
 
-.stat-type .stat-rule {
-  display: none;
-}
-
-/* 06 ANYWHERE */
-
-.scrim-anywhere {
-  background: linear-gradient(180deg, rgba(4, 7, 12, 0.2) 0%, rgba(4, 7, 12, 0.06) 40%, rgba(4, 7, 12, 0.72) 94%, rgba(4, 7, 12, 0.45) 100%);
-}
-
-.anywhere-image {
-  transform: scale(1);
-}
-
-.anywhere-image.is-drifting {
-  transform: scale(1.05);
-  transition: transform 8s linear;
-}
-
-.anywhere-block {
-  position: absolute;
-  bottom: 96px;
-  left: 36px;
-  right: 44px;
+.cta-wrap {
+  margin-top: auto;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  pointer-events: none;
-}
-
-.statement-anywhere {
-  font-size: 30px;
-  line-height: 1.4;
-}
-
-.supporting {
-  font-weight: 300;
-  font-size: 13px;
-  line-height: 1.7;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-/* 07 THE PROMISE */
-
-.promise {
-  background: var(--bg-promise);
-  display: flex;
-  align-items: center;
-}
-
-.promise-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 72px;
-  padding: 0 36px;
-  width: 100%;
-}
-
-.proof {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.proof-line {
-  font-weight: 300;
-  font-size: 21px;
-  line-height: 1.55;
-  letter-spacing: 0.015em;
-  color: #FFFFFF;
-  text-wrap: pretty;
-}
-
-.proof .rule {
-  margin-bottom: 0;
-}
-
-/* 08 THE TURN */
-
-.turn {
-  background: var(--bg-turn);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 0 36px;
-}
-
-.turn-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-}
-
-.turn-mark {
-  width: 40px;
-  display: block;
-}
-
-.turn-wordmark {
-  width: 236px;
-  display: block;
-}
-
-.turn-statement {
-  font-weight: 300;
-  font-size: 28px;
-  line-height: 1.45;
-  letter-spacing: 0.015em;
-  color: #FFFFFF;
-  text-wrap: pretty;
-  margin-top: 72px;
-  max-width: 300px;
+  padding-top: 24px;
 }
 
 .cta {
-  margin-top: 64px;
   display: inline-block;
   border: 1px solid #FFFFFF;
   color: #FFFFFF;
@@ -437,38 +363,20 @@ body {
   font-weight: 500;
   letter-spacing: 0.32em;
   text-transform: uppercase;
+  text-align: center;
   padding: 18px 34px 18px 38px;
   text-decoration: none;
-  white-space: nowrap;
   transition: background-color 480ms var(--ease), color 480ms var(--ease), transform 200ms var(--ease);
 }
 
 .cta:hover,
 .cta:focus-visible {
   background: #FFFFFF;
-  color: var(--bg-turn);
+  color: var(--bg-fleet);
 }
 
 .cta:active {
   transform: scale(0.97);
-}
-
-.quiet-link {
-  margin-top: 28px;
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.55);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-  padding-bottom: 3px;
-  text-decoration: none;
-  transition: color 480ms var(--ease), border-color 480ms var(--ease);
-}
-
-.quiet-link:hover,
-.quiet-link:focus-visible {
-  color: #FFFFFF;
-  border-bottom-color: #FFFFFF;
 }
 
 /* Desktop adaptation — 1440 design */
@@ -502,8 +410,8 @@ body {
     height: 52px;
   }
 
-  /* 02 MORNING */
-  .scrim-morning {
+  /* 02 OPENING */
+  .scrim-opening {
     background: linear-gradient(90deg, rgba(4, 7, 12, 0.55) 0%, rgba(4, 7, 12, 0.15) 55%, rgba(4, 7, 12, 0.05) 100%);
   }
 
@@ -511,48 +419,115 @@ body {
     bottom: 120px;
     left: 96px;
     right: auto;
-    max-width: 640px;
+    max-width: 680px;
+    gap: 28px;
   }
 
   .statement-block .rule {
     width: 32px;
-    margin-bottom: 32px;
   }
 
-  .statement-morning {
+  .statement-opening {
     font-size: 44px;
   }
 
-  /* 03 DAY */
-  .scrim-day {
-    background: linear-gradient(90deg, rgba(4, 7, 12, 0.05) 0%, rgba(4, 7, 12, 0.12) 50%, rgba(4, 7, 12, 0.55) 100%);
+  .subline {
+    font-size: 15px;
+    line-height: 1.8;
+    max-width: 420px;
   }
 
-  .day-block {
-    top: 140px;
-    left: auto;
-    right: 96px;
-    text-align: right;
+  /* 03–06 THE EXPERIENCES */
+  .scrim-experience {
+    background: linear-gradient(180deg, rgba(4, 7, 12, 0.4) 0%, rgba(4, 7, 12, 0.12) 45%, rgba(4, 7, 12, 0.45) 100%);
   }
 
-  .statement-day {
-    font-size: 52px;
+  .experience-celebration .scrim-experience {
+    background: linear-gradient(180deg, rgba(4, 7, 12, 0.45) 0%, rgba(4, 7, 12, 0.15) 45%, rgba(4, 7, 12, 0.45) 100%);
   }
 
-  /* 04 THE YACHT */
-  .yacht {
-    align-items: center;
+  .lockup {
+    gap: 28px;
+    padding: 0 96px;
+  }
+
+  .lockup-headline {
+    font-size: 64px;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+  }
+
+  .lockup-sub {
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: none;
+  }
+
+  .experience-celebration .lockup-sub {
+    max-width: 640px;
+  }
+
+  /* 07 THE CHARTER EXPERIENCE + CTA */
+  .fleet {
+    display: block;
+    padding: 0;
   }
 
   .eyebrow {
-    top: 96px;
+    position: absolute;
+    top: 88px;
     left: 96px;
     font-size: 11px;
+    text-align: left;
+  }
+
+  .lines {
+    position: absolute;
+    left: calc(50% - 600px);
+    width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 96px;
+  }
+
+  .lines-above {
+    top: 168px;
+    margin-top: 0;
+  }
+
+  .lines-below {
+    top: 648px;
+    margin-top: 0;
+  }
+
+  .stat-line {
+    gap: 14px;
+  }
+
+  .lines-above .stat-line {
+    justify-content: flex-end;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    line-height: 2.1;
+  }
+
+  .stat-line:nth-child(3) .stat-label {
+    white-space: nowrap;
+  }
+
+  .stat-rule {
+    height: 44px;
   }
 
   .hull-stage {
+    position: absolute;
+    top: 302px;
+    left: calc(50% - 440px);
     width: 880px;
-    padding: 0;
+    margin: 0;
   }
 
   .hull {
@@ -567,143 +542,24 @@ body {
     stroke-width: 0.8;
   }
 
-  .stat-label {
-    font-size: 12px;
-    letter-spacing: 0.32em;
-    line-height: 2.1;
-  }
-
-  .stat-count {
-    top: 220px;
-    left: 180px;
-    right: auto;
-  }
-
-  .stat-count .stat-rule {
-    height: 72px;
-    margin: 14px 1px 0 auto;
-  }
-
-  .stat-size {
-    top: 190px;
-    right: 180px;
-    left: auto;
-    bottom: auto;
-    flex-direction: column-reverse;
-    text-align: left;
-  }
-
-  .stat-size .stat-rule {
-    height: 96px;
-    margin: 14px 0 0 1px;
-  }
-
-  .stat-type {
-    bottom: 130px;
-  }
-
-  .stat-type .stat-rule {
-    display: block;
-    height: 48px;
-    margin: 0 auto 14px;
-  }
-
-  /* 05 GOLDEN HOUR */
-  .scrim-golden {
-    background: linear-gradient(90deg, rgba(4, 7, 12, 0.55) 0%, rgba(4, 7, 12, 0.15) 55%, rgba(4, 7, 12, 0.05) 100%);
-  }
-
-  .golden .statement-block {
-    max-width: 680px;
-  }
-
-  .statement-golden {
-    font-size: 40px;
-    line-height: 1.5;
-  }
-
-  /* 06 ANYWHERE */
-  .scrim-anywhere {
-    background: linear-gradient(180deg, rgba(4, 7, 12, 0.15) 0%, rgba(4, 7, 12, 0.06) 40%, rgba(4, 7, 12, 0.65) 95%, rgba(4, 7, 12, 0.4) 100%);
-  }
-
-  .anywhere-block {
-    bottom: 120px;
-    left: 96px;
-    right: 96px;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 96px;
-  }
-
-  .statement-anywhere {
-    font-size: 44px;
-    max-width: 760px;
-  }
-
-  .supporting {
-    font-size: 15px;
-    line-height: 1.8;
-    max-width: 300px;
-    padding-bottom: 8px;
-  }
-
-  /* 07 THE PROMISE */
-  .promise-grid {
-    flex-direction: row;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 96px;
-    padding: 0 96px;
-  }
-
-  .proof {
-    gap: 32px;
-  }
-
-  .proof .rule {
-    width: 32px;
-  }
-
-  .proof-line {
-    font-size: 24px;
-    line-height: 1.6;
-  }
-
-  /* 08 THE TURN */
-  .turn-logo {
-    gap: 34px;
-  }
-
-  .turn-mark {
-    width: 48px;
-  }
-
-  .turn-wordmark {
-    width: 300px;
-  }
-
-  .turn-statement {
-    font-size: 36px;
-    line-height: 1.5;
-    margin-top: 88px;
-    max-width: 640px;
+  .cta-wrap {
+    position: absolute;
+    bottom: 64px;
+    left: 0;
+    width: 100%;
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .cta {
-    margin-top: 72px;
     font-size: 12px;
+    min-width: 300px;
     padding: 20px 40px 20px 44px;
-  }
-
-  .quiet-link {
-    margin-top: 32px;
-    font-size: 13px;
+    white-space: nowrap;
   }
 }
 
-/* Reduced motion — posters only, no pins, no rotation */
+/* Reduced motion — posters only, no pins, no rotation, no sequences */
 
 @media (prefers-reduced-motion: reduce) {
   .section {
@@ -720,13 +576,7 @@ body {
     animation: none;
   }
 
-  .anywhere-image.is-drifting {
-    transition: none;
-    transform: none;
-  }
-
-  .cta,
-  .quiet-link {
+  .cta {
     transition: none;
   }
 }

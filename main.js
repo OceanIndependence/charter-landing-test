@@ -17,7 +17,8 @@ function measureFlow() {
 measureFlow();
 selectSources();
 
-// Reduced motion: posters only — no playback, no pins, no rotation.
+// Reduced motion: posters only — no playback, no pins, no rotation,
+// no sequenced reveals (everything is visible statically by default).
 if (reducedMotion) {
   document.querySelectorAll("video").forEach((video) => {
     video.removeAttribute("autoplay");
@@ -67,8 +68,6 @@ function onShow(section, lead) {
 
 function initMedia() {
   const videos = Array.from(document.querySelectorAll("video.media"));
-  const still = document.querySelector(".anywhere-image");
-  const anywhere = still.closest(".section");
 
   // Lazy-load videos beyond the hero, one viewport ahead of arrival.
   const loader = new IntersectionObserver(
@@ -108,16 +107,6 @@ function initMedia() {
         video.pause();
       }
     });
-
-    // 06 ANYWHERE — slow 8 s scale drift, once per entry.
-    if (onShow(anywhere, 0)) {
-      still.classList.add("is-drifting");
-    } else if (still.classList.contains("is-drifting")) {
-      still.style.transition = "none";
-      still.classList.remove("is-drifting");
-      void still.offsetWidth;
-      still.style.transition = "";
-    }
   }
 
   window.addEventListener("scroll", updatePlayback, { passive: true });
@@ -151,9 +140,9 @@ function initMotion() {
   const enters = (section, at) => () => flowTop.get(section) - at * vh();
   const covered = (section) => () => flowTop.get(section) + section.offsetHeight;
 
-  // 02 MORNING · 05 GOLDEN HOUR — the 180svh sticky section pins the
-  // statement over its own video for ~80vh; a scrubbed fade releases it
-  // just before the next section's curtain arrives.
+  // 02 OPENING — the 180svh sticky section pins the statement over its
+  // own video for ~80vh; a scrubbed fade releases it just before the
+  // next section's curtain arrives.
   document.querySelectorAll(".pin-block").forEach((block) => {
     const section = block.closest(".section");
 
@@ -180,26 +169,23 @@ function initMotion() {
     );
   });
 
-  // 03 DAY — the one faster section: the line snaps in, no fade.
-  const day = document.querySelector(".day");
-  gsap.fromTo(
-    ".day-block",
-    { autoAlpha: 0 },
-    {
-      autoAlpha: 1,
-      duration: 0.01,
-      scrollTrigger: {
-        trigger: day,
-        start: enters(day, 0.25),
-        toggleActions: "play none none reverse",
-      },
-    }
-  );
+  // 03–06 THE EXPERIENCES — lockups fade in on the hero's timing:
+  // a 1.2 s beat after the section arrives, then 480 ms rise-and-fade.
+  document.querySelectorAll(".experience").forEach((section) => {
+    gsap.from(section.querySelectorAll(".lockup-headline, .lockup-sub"), {
+      opacity: 0,
+      ...RISE,
+      delay: 1.2,
+      scrollTrigger: { trigger: section, start: enters(section, 0.6) },
+    });
+  });
 
-  // 04 THE YACHT — hull draws in, stats follow with a 120 ms stagger,
-  // and the whole model rotates ±12° with scroll progress, damped so it
-  // trails the scroll slightly.
-  const yacht = document.querySelector(".yacht");
+  // 07 THE CHARTER EXPERIENCE — hull draws in, then the six lines build
+  // in strict sequence: the rule draws out of the hull toward the text
+  // (~400 ms), the text rises and fades in (~300 ms), a ~120 ms beat,
+  // then the next line. Mobile runs in on-screen order; desktop zigzags
+  // left to right. Plays once, never replays.
+  const fleet = document.querySelector(".fleet");
   const hull = document.querySelector(".hull");
   const drawn = [];
   const faded = [];
@@ -214,11 +200,26 @@ function initMotion() {
     }
   });
 
-  gsap
-    .timeline({ scrollTrigger: { trigger: yacht, start: enters(yacht, 0.55) } })
+  const desktop = window.matchMedia("(min-width: 900px)").matches;
+  const above = Array.from(fleet.querySelectorAll(".lines-above .stat-line"));
+  const below = Array.from(fleet.querySelectorAll(".lines-below .stat-line"));
+  const order = desktop
+    ? [above[0], below[0], above[1], below[1], above[2], below[2]]
+    : [...above, ...below];
+
+  const sequence = gsap.timeline({
+    scrollTrigger: { trigger: fleet, start: enters(fleet, 0.55), once: true },
+  });
+  sequence
     .to(drawn, { strokeDashoffset: 0, duration: 1.6, ease: EASE, stagger: 0.08 })
-    .from(faded, { opacity: 0, duration: 0.8, ease: EASE, stagger: 0.05 }, "-=0.8")
-    .from(".stat", { opacity: 0, ...RISE, stagger: 0.12 }, "-=0.2");
+    .from(faded, { opacity: 0, duration: 0.8, ease: EASE, stagger: 0.05 }, "-=0.8");
+  order.forEach((line) => {
+    sequence
+      .from(line.querySelector(".stat-rule"), { scaleY: 0, duration: 0.4, ease: EASE }, ">")
+      .from(line.querySelector(".stat-label"), { opacity: 0, y: 10, duration: 0.3, ease: EASE }, ">")
+      .to({}, { duration: 0.12 });
+  });
+  sequence.from(".cta-wrap", { opacity: 0, ...RISE }, ">");
 
   gsap.fromTo(
     ".hull-rotor",
@@ -227,43 +228,11 @@ function initMotion() {
       rotateY: 12,
       ease: "none",
       scrollTrigger: {
-        trigger: yacht,
-        start: enters(yacht, 1),
-        end: covered(yacht),
+        trigger: fleet,
+        start: enters(fleet, 1),
+        end: covered(fleet),
         scrub: 1,
       },
     }
   );
-
-  // 06 ANYWHERE — supporting line follows the headline in at +200 ms.
-  const anywhere = document.querySelector(".anywhere");
-  gsap.from(".statement-anywhere", {
-    opacity: 0,
-    ...RISE,
-    scrollTrigger: { trigger: anywhere, start: enters(anywhere, 0.6) },
-  });
-  gsap.from(".supporting", {
-    opacity: 0,
-    ...RISE,
-    delay: 0.2,
-    scrollTrigger: { trigger: anywhere, start: enters(anywhere, 0.6) },
-  });
-
-  // 07 THE PROMISE — proof points rise and fade in, staggered.
-  const promise = document.querySelector(".promise");
-  gsap.from(".proof", {
-    opacity: 0,
-    ...RISE,
-    stagger: 0.12,
-    scrollTrigger: { trigger: promise, start: enters(promise, 0.6) },
-  });
-
-  // 08 THE TURN — gentle staggered reveal of the close.
-  const turn = document.querySelector(".turn");
-  gsap.from(".turn > *", {
-    opacity: 0,
-    ...RISE,
-    stagger: 0.12,
-    scrollTrigger: { trigger: turn, start: enters(turn, 0.6) },
-  });
 }
