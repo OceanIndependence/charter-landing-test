@@ -264,12 +264,24 @@ function initMotion() {
   });
   sequence
     .to(drawn, { strokeDashoffset: 0, duration: 1.6, ease: EASE, stagger: 0.08 })
-    .from(faded, { opacity: 0, duration: 0.8, ease: EASE, stagger: 0.05 }, "-=0.8");
-  order.forEach((line) => {
+    .from(faded, { opacity: 0, duration: 0.8, ease: EASE, stagger: 0.05 }, "-=0.8")
+    .addLabel("lines");
+  // Rule 250ms, text 250ms starting as its rule finishes; each line
+  // begins 100ms before the previous line's text ends (a 400ms cadence)
+  // so the sequence flows continuously instead of stepping.
+  order.forEach((line, i) => {
+    const at = i * 0.4;
     sequence
-      .from(line.querySelector(".stat-rule"), { scaleY: 0, duration: 0.4, ease: EASE }, ">")
-      .from(line.querySelector(".stat-label"), { opacity: 0, y: 10, duration: 0.3, ease: EASE }, ">")
-      .to({}, { duration: 0.12 });
+      .from(
+        line.querySelector(".stat-rule"),
+        { scaleY: 0, duration: 0.25, ease: EASE },
+        `lines+=${at}`
+      )
+      .from(
+        line.querySelector(".stat-label"),
+        { opacity: 0, y: 10, duration: 0.25, ease: EASE },
+        `lines+=${at + 0.25}`
+      );
   });
   sequence.from(".cta-wrap", { opacity: 0, ...RISE }, ">");
 
