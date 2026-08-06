@@ -170,11 +170,28 @@ function initMotion() {
   document.querySelectorAll(".pin-block").forEach((block) => {
     const section = block.closest(".section");
 
-    gsap.from(block.children, {
-      opacity: 0,
-      ...RISE,
-      scrollTrigger: { trigger: section, start: enters(section, 0.6) },
-    });
+    // The mint rule draws in horizontally first, then the statement
+    // fades and rises, with the subline following at +200 ms.
+    gsap
+      .timeline({
+        scrollTrigger: { trigger: section, start: enters(section, 0.6), once: true },
+      })
+      .from(block.querySelector(".rule"), {
+        scaleX: 0,
+        transformOrigin: "left center",
+        duration: 0.4,
+        ease: EASE,
+      })
+      .from(
+        block.querySelector(".statement"),
+        { autoAlpha: 0, y: 14, duration: 0.7, ease: EASE },
+        ">"
+      )
+      .from(
+        block.querySelector(".subline"),
+        { autoAlpha: 0, y: 14, duration: 0.7, ease: EASE },
+        "<0.2"
+      );
 
     gsap.fromTo(
       block,
