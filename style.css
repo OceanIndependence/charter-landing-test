@@ -193,6 +193,41 @@ body {
   pointer-events: none;
 }
 
+/* Entrance sequence, all initial state in CSS: the mint rule (a block
+   element at its full final width) draws via transform only, then the
+   statement and subline fade and rise. Triggered by .is-visible from an
+   IntersectionObserver on the section — never on page load. */
+.pin-block .rule {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 500ms var(--ease);
+}
+
+.pin-block .statement,
+.pin-block .subline {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+
+.pin-block .statement {
+  transition-delay: 500ms;
+}
+
+.pin-block .subline {
+  transition-delay: 700ms;
+}
+
+.pin-block.is-visible .rule {
+  transform: scaleX(1);
+}
+
+.pin-block.is-visible .statement,
+.pin-block.is-visible .subline {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .statement-opening {
   font-size: 30px;
   line-height: 1.4;
@@ -606,6 +641,19 @@ body {
   .cta {
     transition: none;
   }
+
+  /* Opening entrance under reduced motion: rule shown at rest, text
+     fades only, with no movement. */
+  .pin-block .rule {
+    transform: none;
+    transition: none;
+  }
+
+  .pin-block .statement,
+  .pin-block .subline {
+    transform: none;
+    transition: opacity 700ms var(--ease);
+  }
 }
 
 html.no-motion .experience,
@@ -636,11 +684,11 @@ html.rm-fade .lockup-sub {
   transition: opacity 700ms var(--ease);
 }
 
-html.rm-fade .lockup.is-in .lockup-headline {
+html.rm-fade .lockup.is-visible .lockup-headline {
   opacity: 1;
 }
 
-html.rm-fade .lockup.is-in .lockup-sub {
+html.rm-fade .lockup.is-visible .lockup-sub {
   opacity: 1;
   transition-delay: 200ms;
 }
