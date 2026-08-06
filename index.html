@@ -15,8 +15,8 @@
 
     <!-- 01 HERO -->
     <section class="section hero" id="hero">
-      <video class="media" autoplay muted loop playsinline preload="auto" data-eager
-             data-mobile="media/s1.mp4" data-desktop="media/s1-desktop.mp4"
+      <video class="media" autoplay muted loop playsinline preload="none" data-eager
+             src="media/s1.mp4" data-mobile="media/s1.mp4" data-desktop="media/s1-desktop.mp4"
              poster="media/s1-poster.jpg" data-poster-desktop="media/s1-poster-desktop.jpg"></video>
       <div class="scrim scrim-hero"></div>
       <div class="hero-statement-wrap">
@@ -30,6 +30,7 @@
 
     <!-- 02 MORNING -->
     <section class="section morning">
+      <div class="frame">
       <video class="media" muted loop playsinline preload="none"
              data-mobile="media/s2.mp4" data-desktop="media/s2-desktop.mp4"
              poster="media/s2-poster.jpg" data-poster-desktop="media/s2-poster-desktop.jpg"></video>
@@ -37,6 +38,7 @@
       <div class="statement-block pin-block">
         <div class="rule rule-mint"></div>
         <p class="statement statement-morning">Your crew has been up since six.<br class="desktop-br"> You will never notice.</p>
+      </div>
       </div>
     </section>
 
@@ -90,6 +92,7 @@
 
     <!-- 05 GOLDEN HOUR -->
     <section class="section golden">
+      <div class="frame">
       <video class="media" muted loop playsinline preload="none"
              data-mobile="media/s5.mp4" data-desktop="media/s5-desktop.mp4"
              poster="media/s5-poster.jpg" data-poster-desktop="media/s5-poster-desktop.jpg"></video>
@@ -97,6 +100,7 @@
       <div class="statement-block pin-block">
         <div class="rule rule-mint"></div>
         <p class="statement statement-golden">The chef asked what you fancied. That was the only decision you made today.</p>
+      </div>
       </div>
     </section>
 
@@ -147,6 +151,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

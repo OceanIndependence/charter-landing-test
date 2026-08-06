@@ -41,11 +41,31 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Every section sticks at the top of the viewport and is covered by the
+   next one sliding over it — the curtain reveal. Layout space is kept,
+   so scroll length and trigger positions are unaffected. */
 .section {
-  position: relative;
+  position: sticky;
+  top: 0;
   height: 100svh;
   overflow: hidden;
   background: var(--bg-media);
+}
+
+/* Sections 2 and 5 are 180svh: their 100svh frame stays on screen for
+   an extra ~80vh of scroll, pinning the statement over its own video. */
+.morning,
+.golden {
+  height: 180svh;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
 }
 
 .media {
@@ -118,7 +138,7 @@ body {
   text-align: center;
   text-wrap: pretty;
   opacity: 0;
-  animation: heroIn 480ms ease-out 1.2s forwards;
+  animation: heroIn 480ms var(--ease) 1.2s forwards;
 }
 
 @keyframes heroIn {
@@ -175,8 +195,6 @@ body {
   left: 36px;
   right: 52px;
   pointer-events: none;
-  /* Keeps the statement above later sections while GSAP pins it. */
-  z-index: 10;
 }
 
 .statement-morning {
@@ -688,6 +706,11 @@ body {
 /* Reduced motion — posters only, no pins, no rotation */
 
 @media (prefers-reduced-motion: reduce) {
+  .section {
+    position: static;
+    height: 100svh;
+  }
+
   .hero-statement {
     animation: none;
     opacity: 1;
