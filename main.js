@@ -26,22 +26,10 @@ if (reducedMotion) {
     video.removeAttribute("autoplay");
     video.pause();
   });
-  document.documentElement.classList.add("rm-fade");
-  const fadeIn = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.4 }
-  );
-  document.querySelectorAll(".lockup").forEach((lockup) => fadeIn.observe(lockup));
-  initOpeningEntrance();
+  initTextEntrances();
 } else {
   initMedia();
-  initOpeningEntrance();
+  initTextEntrances();
   if (window.gsap && window.ScrollTrigger) {
     initMotion();
   } else {
@@ -77,16 +65,18 @@ function selectSources() {
   });
 }
 
-// 02 OPENING entrance — plain CSS transitions triggered by a class.
-// The IntersectionObserver watches the section at threshold 0.4, so the
-// sequence starts only when the section is genuinely in view on scroll,
-// never on page load; it unobserves after firing so it cannot replay.
-function initOpeningEntrance() {
+// Text entrances — plain CSS transitions triggered by a class, one
+// IntersectionObserver at threshold 0.4, firing once then unobserving
+// so nothing replays, and never firing on page load. The opening is
+// observed at section level; the experiences observe the black panel
+// itself, because a 260svh section can never reach 40% visibility in a
+// 100svh viewport (the panel's clipped rect can, as it rises).
+function initTextEntrances() {
   const observer = new IntersectionObserver(
     (entries, obs) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        const block = entry.target.querySelector(".pin-block");
+        const block = entry.target.querySelector(".pin-block, .lockup");
         void block.offsetWidth;
         block.classList.add("is-visible");
         obs.unobserve(entry.target);
@@ -95,6 +85,7 @@ function initOpeningEntrance() {
     { threshold: 0.4 }
   );
   document.querySelectorAll(".opening").forEach((section) => observer.observe(section));
+  document.querySelectorAll(".experience .panel").forEach((panel) => observer.observe(panel));
 }
 
 // A section is on show from one viewport before its flow slot until the
@@ -236,28 +227,9 @@ function initMotion() {
       }
     );
 
-    // Text enters once, when the panel settles: 700 ms, opacity and
-    // transform only (compositor-friendly), headline first, subheadline
-    // at +200 ms. Never scrubbed, never replayed on scroll back.
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: () => flowTop.get(section) + 1.0 * vh(),
-          once: true,
-        },
-      })
-      .from(section.querySelector(".lockup-headline"), {
-        autoAlpha: 0,
-        y: 14,
-        duration: 0.7,
-        ease: EASE,
-      })
-      .from(
-        section.querySelector(".lockup-sub"),
-        { autoAlpha: 0, y: 14, duration: 0.7, ease: EASE },
-        0.2
-      );
+    // The text entrance itself is CSS, triggered by initTextEntrances
+    // observing this panel — rule opens from centre, then headline,
+    // then subheadline.
   });
 
   // 07 THE CHARTER EXPERIENCE — hull draws in, then the six lines build

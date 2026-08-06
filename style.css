@@ -96,7 +96,7 @@ body {
 }
 
 .rule {
-  width: 24px;
+  width: 48px;
   height: 1px;
 }
 
@@ -199,7 +199,7 @@ body {
    IntersectionObserver on the section — never on page load. */
 .pin-block .rule {
   transform: scaleX(0);
-  transform-origin: left;
+  transform-origin: center;
   transition: transform 500ms var(--ease);
 }
 
@@ -275,6 +275,45 @@ body {
   align-items: center;
   gap: 20px;
   pointer-events: none;
+}
+
+/* The repeating mint signature: a hairline at its full final width in
+   CSS, opening outwards from the centre on transform alone, then the
+   headline and subheadline fade and rise. Initial state lives here;
+   .is-visible (added once by an IntersectionObserver when the panel is
+   in view, never on load) plays the sequence. */
+.lockup-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 500ms var(--ease);
+}
+
+.lockup-headline,
+.lockup-sub {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+
+.lockup-headline {
+  transition-delay: 500ms;
+}
+
+.lockup-sub {
+  transition-delay: 700ms;
+}
+
+.lockup.is-visible .lockup-rule {
+  transform: scaleX(1);
+}
+
+.lockup.is-visible .lockup-headline,
+.lockup.is-visible .lockup-sub {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .lockup-headline {
@@ -469,7 +508,11 @@ body {
   }
 
   .statement-block .rule {
-    width: 32px;
+    width: 64px;
+  }
+
+  .lockup-rule {
+    width: 64px;
   }
 
   .statement-opening {
@@ -642,15 +685,18 @@ body {
     transition: none;
   }
 
-  /* Opening entrance under reduced motion: rule shown at rest, text
-     fades only, with no movement. */
-  .pin-block .rule {
+  /* Text entrances under reduced motion: every mint rule appears at
+     full width with no draw, and the text fades only, no movement. */
+  .pin-block .rule,
+  .lockup-rule {
     transform: none;
     transition: none;
   }
 
   .pin-block .statement,
-  .pin-block .subline {
+  .pin-block .subline,
+  .lockup-headline,
+  .lockup-sub {
     transform: none;
     transition: opacity 700ms var(--ease);
   }
@@ -675,20 +721,17 @@ html.no-motion .panel {
   height: 100svh;
 }
 
-/* Reduced-motion text entrance: fade only, no movement, once per
-   lockup. The class is added by JS, so without JS the text simply
-   stays visible. */
-html.rm-fade .lockup-headline,
-html.rm-fade .lockup-sub {
-  opacity: 0;
-  transition: opacity 700ms var(--ease);
+html.no-motion .lockup-rule,
+html.no-motion .pin-block .rule {
+  transform: none;
+  transition: none;
 }
 
-html.rm-fade .lockup.is-visible .lockup-headline {
+html.no-motion .lockup-headline,
+html.no-motion .lockup-sub,
+html.no-motion .pin-block .statement,
+html.no-motion .pin-block .subline {
   opacity: 1;
-}
-
-html.rm-fade .lockup.is-visible .lockup-sub {
-  opacity: 1;
-  transition-delay: 200ms;
+  transform: none;
+  transition: none;
 }
