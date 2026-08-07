@@ -438,11 +438,13 @@ body {
   padding-top: 24px;
 }
 
+/* Solid button: opaque in both states so that once it is fixed it
+   masks rather than tangles with any text scrolling behind it. */
 .cta {
   display: inline-block;
   border: 1px solid #FFFFFF;
-  color: #FFFFFF;
-  background: transparent;
+  color: var(--bg-fleet);
+  background: #FFFFFF;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.32em;
@@ -455,8 +457,8 @@ body {
 
 .cta:hover,
 .cta:focus-visible {
-  background: #FFFFFF;
-  color: var(--bg-fleet);
+  background: var(--bg-fleet);
+  color: #FFFFFF;
 }
 
 .cta:active {
@@ -571,9 +573,12 @@ body {
     padding: 0;
   }
 
+  /* Vertical offsets are proportions of the 900px artboard so the
+     layout compresses on shorter viewports instead of colliding with
+     the bottom-anchored CTA. */
   .eyebrow {
     position: absolute;
-    top: 88px;
+    top: 9.8%;
     left: 96px;
     font-size: 11px;
     text-align: left;
@@ -589,12 +594,14 @@ body {
   }
 
   .lines-above {
-    top: 168px;
+    top: 18.7%;
     margin-top: 0;
   }
 
   .lines-below {
-    top: 648px;
+    /* 72% of the artboard, but always leaving 220px beneath for the
+       labels, clearance and the bottom-anchored CTA on short windows. */
+    top: min(72%, calc(100% - 220px));
     margin-top: 0;
   }
 
@@ -622,7 +629,7 @@ body {
 
   .hull-stage {
     position: absolute;
-    top: 302px;
+    top: 33.6%;
     left: calc(50% - 440px);
     width: 880px;
     margin: 0;
@@ -642,7 +649,7 @@ body {
 
   .cta-wrap {
     position: absolute;
-    bottom: 64px;
+    bottom: clamp(24px, 7.1%, 64px);
     left: 0;
     width: 100%;
     margin-top: 0;
@@ -656,9 +663,10 @@ body {
     white-space: nowrap;
   }
 
-  /* Matches the desktop flow offset (.cta-wrap bottom: 64px). */
+  /* Matches the desktop flow offset (clamp(24px, 7.1%, 64px) of the
+     100svh fleet section). */
   .cta-fixed {
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(clamp(24px, 7.1svh, 64px) + env(safe-area-inset-bottom, 0px));
   }
 }
 
